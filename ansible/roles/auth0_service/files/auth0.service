@@ -1,0 +1,14 @@
+[Unit]
+Description=Job that runs the auth0 daemon
+
+[Service]
+Type=simple
+Environment=NODE_ENV=production
+Group=www-data
+User=www-data
+WorkingDirectory=/srv/node
+ExecStart=/usr/bin/node index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

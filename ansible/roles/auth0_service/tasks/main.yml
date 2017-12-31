@@ -1,0 +1,26 @@
+---
+- name: Add nodejs sources.list file
+  shell: "curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -"
+- name: Install nodejs
+  apt: pkg=nodejs state=installed update_cache=true
+- name: Create service dir
+  file:
+      path: /srv/node
+      state: directory
+      recurse: true
+      mode: 0755
+      owner: root
+      group: root
+- name: Upload service files
+  copy: src=latest.tar.gz dest=/var/tmp mode=0644
+- name: Untar code
+  shell: "sudo tar -xzvf /var/tmp/latest.tar.gz -C /srv/node"
+- name: Execute chown
+  shell: "sudo chown -R www-data:www-data /srv/node"
+- name: Upload systemd unit
+  copy: src=auth0.service dest=/etc/systemd/system/auth0.service mode=0644
+- name: ensure auth0_service is started
+  service:
+    name: auth0
+    state: started
+    enabled: yes

@@ -1,0 +1,20 @@
+{
+  "name": "a-roller",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "roller": "index.js"
+  },
+  "author": "Lars Jacob <lars@gmail.com>",
+  "repository": "git@github.com:jaclar/a-roller.git",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.0",
+    "aws-sdk": "^2.176.0",
+    "minimist": "^1.2.0"
+  }
+}

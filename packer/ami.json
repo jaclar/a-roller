@@ -1,0 +1,41 @@
+{
+  "variables": {
+    "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+    "build_number": ""
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "us-east-2",
+    "source_ami_filter": {
+      "filters": {
+      "virtualization-type": "hvm",
+      "name": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
+      "root-device-type": "ebs"
+      },
+      "owners": ["099720109477"],
+      "most_recent": true
+    },
+    "instance_type": "t2.micro",
+    "ssh_username": "ubuntu",
+    "ami_name": "[lars] auth0 service {{user `build_number`}}"
+
+  }],
+  "provisioners": [{
+    "type": "shell-local",
+    "command": "tar --exclude '.git' --exclude 'ansible' --exclude 'packer' -cvhzf ./ansible/latest.tar.gz ./"
+  }, {
+    "type": "shell",
+    "inline": [
+      "sudo apt-get update -y",
+      "sudo apt-get install -y ansible"
+    ]
+  }, {
+    "type": "ansible-local",
+    "playbook_file": "./node_modules/a-roller/ansible/playbook.yml",
+    "role_paths": "./node_modules/a-roller/ansible/roles/auth0_service/",
+    "playbook_dir": "./node_modules/a-roller/ansible"
+  }]
+}
